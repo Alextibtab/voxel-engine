@@ -47,7 +47,12 @@ int main() {
   glEnable(GL_DEPTH_TEST);
 
   Shader shader("../src/vertex.glsl", "../src/fragment.glsl");
+  VoxelWorld world(16, 6, 2, 6);
   Player player((float)SCR_WIDTH / (float)SCR_HEIGHT);
+
+  world.set_player(&player);
+  player.set_world(&world);
+
   glfwSetWindowUserPointer(window, &player);
 
   glfwSetCursorPosCallback(
@@ -62,7 +67,6 @@ int main() {
             ->scroll_callback(xoffset, yoffset);
       });
 
-  VoxelWorld world(16, 16, 1, 16);
   unsigned int seed = static_cast<unsigned int>(time(nullptr));
   world.generate(seed);
 
