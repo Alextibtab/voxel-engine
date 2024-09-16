@@ -1,1 +1,1 @@
- cmake -S . -B build -G "MinGW Makefiles"
+ cmake --preset=default -S . -B build

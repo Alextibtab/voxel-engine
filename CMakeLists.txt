@@ -1,19 +1,18 @@
 cmake_minimum_required(VERSION 3.0.0)
-project(voxel-engine VERSION 0.0.1)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+set(VCPKG_TARGET_TRIPLET x86-mingw-dynamic)
+set(VCPKG_HOST_TRIPLET x86-mingw-dynamic)
+
+project(voxel-engine VERSION 0.0.1)
 
 include_directories(
 	"${CMAKE_SOURCE_DIR}/src"
-	"${CMAKE_SOURCE_DIR}/include"
-	"${CMAKE_SOURCE_DIR}/include/glad"
-	"${CMAKE_SOURCE_DIR}/include/glm"
 )
-
-link_directories(${CMAKE_SOURCE_DIR}/lib)
 
 file(GLOB_RECURSE SOURCE_FILES
 	${CMAKE_SOURCE_DIR}/src/*.cpp)
@@ -23,14 +22,14 @@ file(GLOB_RECURSE HEADER_FILES
 
 add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES})
 
+find_package(glad CONFIG REQUIRED)
+find_package(glfw3 CONFIG REQUIRED)
+find_package(glm CONFIG REQUIRED)
 find_package(OpenGL REQUIRED)
-find_library(GLFW3 "lib/libglfw3.a")
 
-add_library(GLAD "${CMAKE_SOURCE_DIR}/lib/glad.c")
+set(LIBS OpenGL::GL glfw glad::glad glm::glm)
 
-set(LIBS GLFW3 ${OPENGL_LIBRARY} GLAD)
-
-target_link_libraries(${PROJECT_NAME} ${LIBS})
+target_link_libraries(${PROJECT_NAME} PRIVATE ${LIBS})
 
 message(STATUS "Source files: ${SOURCE_FILES}")
 message(STATUS "Header files: ${HEADER_FILES}")

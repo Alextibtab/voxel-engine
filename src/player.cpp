@@ -1,6 +1,6 @@
 #include "player.hpp"
 #include "GLFW/glfw3.h"
-#include "ext/matrix_clip_space.hpp"
+#include "glm/ext/matrix_clip_space.hpp"
 
 Player::Player(float aspect_ratio)
     : m_camera(std::make_unique<Camera>(glm::vec3(40.0f, 20.0f, -30.0f))),
