@@ -1,2 +1,8 @@
 build
 .cache
+
+# vcpkg
+vcpkg_installed/
+.vcpkg/
+vcpkg-configuration.json
+vcpkg-manifest-install.log
