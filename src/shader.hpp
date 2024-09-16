@@ -1,6 +1,6 @@
 #pragma once
 
-#include <gtc/type_ptr.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <glad/glad.h>
 
 #include <string>

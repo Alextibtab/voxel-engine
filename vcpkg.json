@@ -1,0 +1,15 @@
+{
+  "name": "voxel-engine",
+  "version": "0.0.1",
+  "homepage": "https://github.com/Alextibtab/voxel-engine",
+  "dependencies": [
+    {
+      "name": "imgui",
+      "features": [ "glfw-binding", "opengl3-binding" ]
+    },
+    "glfw3",
+    "glm",
+    "opengl",
+    "glad"
+  ]
+}

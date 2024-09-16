@@ -4,6 +4,10 @@
 #include <iostream>
 #include <ctime>
 
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
+
 #include "shader.hpp"
 #include "player.hpp"
 #include "voxel_world.hpp"
@@ -39,6 +43,17 @@ int main() {
 
   glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
+  // Setup Dear ImGui context
+  IMGUI_CHECKVERSION();
+  ImGui::CreateContext();
+  ImGuiIO &io = ImGui::GetIO();
+  io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+
+  ImGui::StyleColorsDark();
+
+  ImGui_ImplGlfw_InitForOpenGL(window, true);
+  ImGui_ImplOpenGL3_Init("#version 130");
+
   if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
     std::cout << "Failed to initialize GLAD" << std::endl;
     return -1;
@@ -71,6 +86,15 @@ int main() {
   world.generate(seed);
 
   while (!glfwWindowShouldClose(window)) {
+    glfwPollEvents();
+
+    // ImGui
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
+
+    ImGui::ShowDemoWindow();
+
     // Calculate delta_time
     float current_frame = glfwGetTime();
     delta_time = current_frame - last_frame;
@@ -96,11 +120,16 @@ int main() {
     shader.set_vec3f("light_color", light_color);
     shader.set_vec3f("view_position", player.get_position());
 
+    ImGui::Render();
     world.render(shader);
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
     glfwSwapBuffers(window);
-    glfwPollEvents();
   }
+
+  ImGui_ImplOpenGL3_Shutdown();
+  ImGui_ImplGlfw_Shutdown();
+  ImGui::DestroyContext();
 
   glfwTerminate();
   return 0;
