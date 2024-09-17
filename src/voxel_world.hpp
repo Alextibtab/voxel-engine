@@ -27,7 +27,7 @@ private:
 public:
   VoxelWorld(int chunk_size, int size_x, int size_y, int size_z);
 
-  size_t chunks_to_render;
+  int chunks_to_render;
 
   void generate(unsigned int seed);
   void render(const Shader &shader);

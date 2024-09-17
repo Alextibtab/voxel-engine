@@ -19,9 +19,6 @@ float delta_time = 0.0f;
 float last_frame = 0.0f;
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
-void mouse_callback(GLFWwindow *window, double xpos, double ypos);
-void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
-void process_input(GLFWwindow *window);
 
 int main() {
   glfwInit();
@@ -41,8 +38,6 @@ int main() {
   // Set callbacks
   glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-  glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-
   // Setup Dear ImGui context
   IMGUI_CHECKVERSION();
   ImGui::CreateContext();
@@ -53,6 +48,9 @@ int main() {
 
   ImGui_ImplGlfw_InitForOpenGL(window, true);
   ImGui_ImplOpenGL3_Init("#version 130");
+
+  ImGui::GetStyle().ScaleAllSizes(2.0f);
+  ImGui::GetIO().FontGlobalScale = 2.0f;
 
   if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
     std::cout << "Failed to initialize GLAD" << std::endl;
@@ -68,20 +66,6 @@ int main() {
   world.set_player(&player);
   player.set_world(&world);
 
-  glfwSetWindowUserPointer(window, &player);
-
-  glfwSetCursorPosCallback(
-      window, [](GLFWwindow *window, double xpos, double ypos) {
-        static_cast<Player *>(glfwGetWindowUserPointer(window))
-            ->mouse_callback(xpos, ypos);
-      });
-
-  glfwSetScrollCallback(
-      window, [](GLFWwindow *window, double xoffset, double yoffset) {
-        static_cast<Player *>(glfwGetWindowUserPointer(window))
-            ->scroll_callback(xoffset, yoffset);
-      });
-
   unsigned int seed = static_cast<unsigned int>(time(nullptr));
   world.generate(seed);
 
@@ -93,12 +77,25 @@ int main() {
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 
-    ImGui::ShowDemoWindow();
+    {
+      ImGui::Begin("Debug Menu");
+
+      ImGui::Text("Hello, World!");
+      ImGui::SliderInt("Chunks to render", &world.chunks_to_render, 0, 100);
+      ImGui::End();
+    }
 
     // Calculate delta_time
     float current_frame = glfwGetTime();
     delta_time = current_frame - last_frame;
     last_frame = current_frame;
+
+    double xpos, ypos;
+    glfwGetCursorPos(window, &xpos, &ypos);
+
+    if (!ImGui::GetIO().WantCaptureMouse && !player.is_paused()) {
+      player.process_mouse(xpos, ypos);
+    }
 
     player.process_input(window, delta_time);
     player.update(delta_time);

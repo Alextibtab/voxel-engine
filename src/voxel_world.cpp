@@ -3,9 +3,9 @@
 
 VoxelWorld::VoxelWorld(int chunk_size, int world_size_x, int world_size_y,
                        int world_size_z)
-    : chunks_to_render(0), m_chunk_size(chunk_size),
-      m_world_size_x(world_size_x), m_world_size_y(world_size_y),
-      m_world_size_z(world_size_z) {
+    : chunks_to_render(world_size_x * world_size_z * world_size_y),
+      m_chunk_size(chunk_size), m_world_size_x(world_size_x),
+      m_world_size_y(world_size_y), m_world_size_z(world_size_z) {
   for (int x = 0; x < m_world_size_x; x++) {
     for (int y = 0; y < m_world_size_y; y++) {
       for (int z = 0; z < m_world_size_z; z++) {

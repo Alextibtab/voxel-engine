@@ -12,6 +12,7 @@ private:
   VoxelWorld *m_world;
   std::unique_ptr<Camera> m_camera;
 
+  bool m_paused;
   bool m_first_mouse;
   float m_last_x, m_last_y;
   float m_move_speed;
@@ -24,10 +25,12 @@ public:
   void set_world(VoxelWorld *world);
 
   void process_input(GLFWwindow *window, float delta_time);
-  void mouse_callback(double xpos, double ypos);
-  void scroll_callback(double xoffset, double yoffset);
+  void process_mouse(double xpos, double ypos);
+  void process_scroll(double xoffset, double yoffset);
 
   void update(float delta_time);
+
+  bool is_paused() const;
 
   glm::mat4 get_view_matrix() const;
   glm::mat4 get_projection_matrix() const;
