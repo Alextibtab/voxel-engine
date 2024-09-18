@@ -8,10 +8,6 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 
-#include "shader.hpp"
-#include "player.hpp"
-#include "voxel_world.hpp"
-
 const unsigned int SCR_WIDTH = 1920;
 const unsigned int SCR_HEIGHT = 1080;
 
@@ -59,16 +55,6 @@ int main() {
 
   glEnable(GL_DEPTH_TEST);
 
-  Shader shader("../src/vertex.glsl", "../src/fragment.glsl");
-  VoxelWorld world(16, 6, 2, 6);
-  Player player((float)SCR_WIDTH / (float)SCR_HEIGHT);
-
-  world.set_player(&player);
-  player.set_world(&world);
-
-  unsigned int seed = static_cast<unsigned int>(time(nullptr));
-  world.generate(seed);
-
   while (!glfwWindowShouldClose(window)) {
     glfwPollEvents();
 
@@ -81,7 +67,6 @@ int main() {
       ImGui::Begin("Debug Menu");
 
       ImGui::Text("Hello, World!");
-      ImGui::SliderInt("Chunks to render", &world.chunks_to_render, 0, 100);
       ImGui::End();
     }
 
@@ -93,32 +78,10 @@ int main() {
     double xpos, ypos;
     glfwGetCursorPos(window, &xpos, &ypos);
 
-    if (!ImGui::GetIO().WantCaptureMouse && !player.is_paused()) {
-      player.process_mouse(xpos, ypos);
-    }
-
-    player.process_input(window, delta_time);
-    player.update(delta_time);
-
     glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    shader.use();
-    shader.set_mat4f("model", glm::mat4(1.0f));
-
-    shader.set_mat4f("view", player.get_view_matrix());
-    shader.set_mat4f("projection", player.get_projection_matrix());
-
-    shader.set_vec3f("light_pos", player.get_position());
-    float time = glfwGetTime();
-    glm::vec3 light_color((sin(time * 2.0f) + 1.0f) / 2.0f,
-                          (sin(time * 0.7f) + 1.0f) / 2.0f,
-                          (sin(time * 1.3f) + 1.0f) / 2.0f);
-    shader.set_vec3f("light_color", light_color);
-    shader.set_vec3f("view_position", player.get_position());
-
     ImGui::Render();
-    world.render(shader);
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
     glfwSwapBuffers(window);
