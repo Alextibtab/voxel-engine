@@ -1,8 +1,14 @@
 #pragma once
 
-#include "entity.h"
+#include "ecs/entity_manager.h"
 
 class System {
+private:
+  System();
+
 public:
-  virtual void update(std::vector<Entity *> &entities);
+  virtual void init();
+  virtual void update(EntityVector &entities);
+
+  friend class SystemManager;
 };
