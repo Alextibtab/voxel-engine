@@ -1,5 +1,3 @@
-#include <memory>
-
 #include "system_manager.h"
 
 SystemManager::SystemManager(EntityManager &entity_manager)

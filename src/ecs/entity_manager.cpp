@@ -2,6 +2,8 @@
 
 #include "entity_manager.h"
 
+EntityManager::EntityManager() {}
+
 void EntityManager::update() {
   for (auto entity : entities_to_add_) {
     entities_.push_back(entity);
@@ -16,3 +18,8 @@ std::shared_ptr<Entity> EntityManager::add_entity(const std::string &tag) {
   entities_to_add_.push_back(entity);
   return entity;
 }
+
+EntityVector &EntityManager::get_entities() { return entities_; }
+EntityVector &EntityManager::get_entities(const std::string &tag) {
+  return entities_;
+};
