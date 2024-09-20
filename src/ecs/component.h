@@ -2,5 +2,5 @@
 
 class Component {
 public:
-  virtual void update();
+  bool exists_ = false;
 };

@@ -1,7 +1,14 @@
+#include <glad/glad.h>
+#include <iostream>
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
+
 #include "game.h"
 
 Game::Game()
-    : window_(nullptr), entity_manager_(), system_manager_(entity_manager_) {}
+    : window_(nullptr), entity_manager_(), system_manager_(entity_manager_),
+      shader_(nullptr) {}
 
 Game::~Game() {
   ImGui_ImplOpenGL3_Shutdown();
@@ -51,6 +58,8 @@ void Game::init(const unsigned int width, const unsigned int height) {
   }
 
   glEnable(GL_DEPTH_TEST);
+
+  shader_ = new Shader("../src/vertex.glsl", "../src/fragment.glsl");
 }
 
 void Game::run() {
@@ -79,6 +88,8 @@ void Game::run() {
 
     glClearColor(0.2f, 0.2f, 0.8f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    shader_->use();
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
