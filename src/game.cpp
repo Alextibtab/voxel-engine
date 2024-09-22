@@ -8,10 +8,13 @@
 #include "game.h"
 #include "ecs/components/transform.h"
 #include "ecs/components/camera.h"
+#include "ecs/components/cubemesh.h"
+#include "ecs/systems/camera_system.h"
+#include "ecs/systems/rendering_system.h"
 
 Game::Game()
-    : window_(nullptr), entity_manager_(), system_manager_(entity_manager_),
-      shader_(nullptr), player_(entity_manager_.add_entity("PLAYER")) {}
+    : window_(nullptr), entity_manager_(), system_manager_(), shader_(nullptr),
+      player_(entity_manager_.add_entity("PLAYER")) {}
 
 Game::~Game() {
   ImGui_ImplOpenGL3_Shutdown();
@@ -76,12 +79,16 @@ void Game::run() {
   player_->add<Transform>(glm::vec3(20.0f, 30.0f, 30.0f));
   player_->add<Camera>();
 
-  std::cout << player_->id() << std::endl;
+  auto cube = entity_manager_.add_entity("CUBE");
+  cube->add<CubeMesh>();
+  cube->add<Transform>(glm::vec3(20.0f, 30.0f, 20.0f));
+
+  auto &renderer = system_manager_.add<RenderingSystem>();
+  auto &camera_system = system_manager_.add<CameraSystem>();
 
   while (!glfwWindowShouldClose(window_)) {
     glfwPollEvents();
     entity_manager_.update();
-    system_manager_.update();
 
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
@@ -100,6 +107,13 @@ void Game::run() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     shader_->use();
+    camera_system.update(entity_manager_.get_entities());
+
+    shader_->set_mat4f("model", glm::mat4(1.0f));
+    shader_->set_mat4f("view", player_->get<Camera>().view_matrix_);
+    shader_->set_mat4f("projection", player_->get<Camera>().projection_matrix_);
+
+    renderer.update(entity_manager_.get_entities());
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

@@ -1,5 +1,5 @@
 #include "system.h"
 
 System::System() {}
-void System::init() {}
+System::~System() {}
 void System::update(EntityVector &entities) {}

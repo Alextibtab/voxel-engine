@@ -3,12 +3,11 @@
 #include "ecs/entity_manager.h"
 
 class System {
-private:
-  System();
-
 public:
-  virtual void init();
-  virtual void update(EntityVector &entities);
+  bool exists_ = false;
 
-  friend class SystemManager;
+  System();
+  ~System();
+
+  virtual void update(EntityVector &entities);
 };

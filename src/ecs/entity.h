@@ -3,12 +3,13 @@
 #include <tuple>
 #include <string>
 
+#include "ecs/components/cubemesh.h"
 #include "ecs/components/transform.h"
 #include "ecs/components/lifespan.h"
 #include "ecs/components/input.h"
 #include "ecs/components/camera.h"
 
-using ComponentTuple = std::tuple<Transform, Camera, Lifespan, Input>;
+using ComponentTuple = std::tuple<Transform, Camera, Lifespan, Input, CubeMesh>;
 
 class Entity {
 private:
