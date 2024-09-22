@@ -1,6 +1,7 @@
 #pragma once
 
 #include <GLFW/glfw3.h>
+#include <memory>
 
 #include "ecs/entity_manager.h"
 #include "ecs/system_manager.h"
@@ -9,11 +10,11 @@
 
 class Game {
 private:
-  GLFWwindow *window_;
+  GLFWwindow *window_; // TODO: possible abstract into separate window class
   EntityManager entity_manager_;
   SystemManager system_manager_;
   Shader *shader_;
-  // Entity &player_;
+  std::shared_ptr<Entity> player_;
   bool paused_ = false;
   bool running_ = true;
 

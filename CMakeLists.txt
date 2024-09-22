@@ -5,9 +5,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(VCPKG_TARGET_TRIPLET x86-mingw-dynamic)
-set(VCPKG_HOST_TRIPLET x86-mingw-dynamic)
-
 project(voxel-engine VERSION 0.0.1)
 
 include_directories(
@@ -18,7 +15,7 @@ file(GLOB_RECURSE SOURCE_FILES
 	${CMAKE_SOURCE_DIR}/src/*.cpp)
 
 file(GLOB_RECURSE HEADER_FILES
-	${CMAKE_SOURCE_DIR}/src/*.hpp)
+	${CMAKE_SOURCE_DIR}/src/*.h)
 
 add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES})
 

@@ -1,14 +1,17 @@
 #include <glad/glad.h>
 #include <iostream>
+#include <glm/glm.hpp>
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 
 #include "game.h"
+#include "ecs/components/transform.h"
+#include "ecs/components/camera.h"
 
 Game::Game()
     : window_(nullptr), entity_manager_(), system_manager_(entity_manager_),
-      shader_(nullptr) {}
+      shader_(nullptr), player_(entity_manager_.add_entity("PLAYER")) {}
 
 Game::~Game() {
   ImGui_ImplOpenGL3_Shutdown();
@@ -70,8 +73,15 @@ void Game::run() {
   float delta_time = 0.0f;
   float last_frame = 0.0f;
 
+  player_->add<Transform>(glm::vec3(20.0f, 30.0f, 30.0f));
+  player_->add<Camera>();
+
+  std::cout << player_->id() << std::endl;
+
   while (!glfwWindowShouldClose(window_)) {
     glfwPollEvents();
+    entity_manager_.update();
+    system_manager_.update();
 
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();

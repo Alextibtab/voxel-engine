@@ -2,7 +2,10 @@
 
 #include "entity_manager.h"
 
-EntityManager::EntityManager() {}
+EntityManager::EntityManager() {
+  entities_.reserve(300);
+  entities_to_add_.reserve(30);
+}
 
 void EntityManager::update() {
   for (auto entity : entities_to_add_) {

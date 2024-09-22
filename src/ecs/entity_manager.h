@@ -3,11 +3,12 @@
 #include <memory>
 #include <map>
 #include <string>
+#include <vector>
 
 #include "entity.h"
 
-typedef std::vector<std::shared_ptr<Entity>> EntityVector;
-typedef std::map<std::string, EntityVector> EntityMap;
+using EntityVector = std::vector<std::shared_ptr<Entity>>;
+using EntityMap = std::map<std::string, EntityVector>;
 
 class EntityManager {
 private:
