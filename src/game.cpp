@@ -109,7 +109,8 @@ void Game::run() {
     shader_->use();
     camera_system.update(entity_manager_.get_entities());
 
-    // shader_->set_mat4f("model", glm::mat4(1.0f));
+    // TODO: Add some debugging for the camera to see what values it's
+    // outputtting shader_->set_mat4f("model", glm::mat4(1.0f));
     // shader_->set_mat4f("view", player_->get<Camera>().view_matrix_);
     // shader_->set_mat4f("projection",
     // player_->get<Camera>().projection_matrix_);
