@@ -1,5 +1,6 @@
 #include <glad/glad.h>
 #include <imgui.h>
+#include <iostream>
 
 #include "ecs/components/cubemesh.h"
 #include "ecs/entity_manager.h"
@@ -33,7 +34,8 @@ void RenderingSystem::update(EntityVector &entities) {
 
   for (const auto &entity : entities) {
     if (entity->has<CubeMesh>()) {
-      glDrawArrays(GL_TRIANGLE_FAN, 0, CubeMesh::num_vertices_);
+      std::cout << "Rendering Cube" << std::endl;
+      glDrawArrays(GL_TRIANGLES, 0, CubeMesh::num_vertices_);
     }
   }
 

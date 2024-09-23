@@ -76,12 +76,12 @@ void Game::run() {
   float delta_time = 0.0f;
   float last_frame = 0.0f;
 
-  player_->add<Transform>(glm::vec3(20.0f, 30.0f, 30.0f));
+  player_->add<Transform>(glm::vec3(0.0f, 0.0f, -1.0f));
   player_->add<Camera>();
 
   auto cube = entity_manager_.add_entity("CUBE");
   cube->add<CubeMesh>();
-  cube->add<Transform>(glm::vec3(20.0f, 30.0f, 20.0f));
+  cube->add<Transform>(glm::vec3(0.0f, 0.0f, 0.0f));
 
   auto &renderer = system_manager_.add<RenderingSystem>();
   auto &camera_system = system_manager_.add<CameraSystem>();
@@ -109,9 +109,10 @@ void Game::run() {
     shader_->use();
     camera_system.update(entity_manager_.get_entities());
 
-    shader_->set_mat4f("model", glm::mat4(1.0f));
-    shader_->set_mat4f("view", player_->get<Camera>().view_matrix_);
-    shader_->set_mat4f("projection", player_->get<Camera>().projection_matrix_);
+    // shader_->set_mat4f("model", glm::mat4(1.0f));
+    // shader_->set_mat4f("view", player_->get<Camera>().view_matrix_);
+    // shader_->set_mat4f("projection",
+    // player_->get<Camera>().projection_matrix_);
 
     renderer.update(entity_manager_.get_entities());
 
