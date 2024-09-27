@@ -1,4 +1,6 @@
+#include <cmath>
 #include <glad/glad.h>
+#include <GLFW/glfw3.h>
 #include <iostream>
 #include <glm/glm.hpp>
 #include "imgui.h"
@@ -25,6 +27,7 @@ Game::~Game() {
 }
 
 void Game::init(const unsigned int width, const unsigned int height) {
+  aspect_ratio_ = (float)width / (float)height;
   glfwInit();
 
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -76,15 +79,19 @@ void Game::run() {
   float delta_time = 0.0f;
   float last_frame = 0.0f;
 
-  player_->add<Transform>(glm::vec3(20.0f, 30.0f, 30.0f));
-  player_->add<Camera>();
+  player_->add<Transform>(glm::vec3(0.0f, 0.0f, -1.0f));
+  player_->add<Camera>(aspect_ratio_);
 
   auto cube = entity_manager_.add_entity("CUBE");
   cube->add<CubeMesh>();
-  cube->add<Transform>(glm::vec3(20.0f, 30.0f, 20.0f));
+  cube->add<Transform>(glm::vec3(0.0f, 0.5f, -5.0f));
 
   auto &renderer = system_manager_.add<RenderingSystem>();
   auto &camera_system = system_manager_.add<CameraSystem>();
+
+  shader_->use();
+  shader_->set_vec3f("object_colour", glm::vec3(1.0f, 0.5f, 0.31f));
+  shader_->set_vec3f("light_colour", glm::vec3(1.0f, 1.0f, 1.0f));
 
   while (!glfwWindowShouldClose(window_)) {
     glfwPollEvents();
@@ -103,7 +110,7 @@ void Game::run() {
     delta_time = current_frame - last_frame;
     last_frame = current_frame;
 
-    glClearColor(0.2f, 0.2f, 0.8f, 1.0f);
+    glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     shader_->use();
@@ -113,7 +120,11 @@ void Game::run() {
     shader_->set_mat4f("view", player_->get<Camera>().view_matrix_);
     shader_->set_mat4f("projection", player_->get<Camera>().projection_matrix_);
 
-    renderer.update(entity_manager_.get_entities());
+    shader_->set_vec3f("light_pos",
+                       glm::vec3((float)sin(glfwGetTime()) * 10, 0.5f,
+                                 (float)cos(glfwGetTime()) * 10));
+
+    renderer.update(entity_manager_.get_entities(), shader_);
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

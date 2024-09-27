@@ -22,6 +22,8 @@ public:
   Game();
   ~Game();
 
+  float aspect_ratio_ = 0;
+
   void init(const unsigned int width, const unsigned int height);
   void run();
 };
